@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>date2nine</title>
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <style>
+    :root { --fg: #0b132b; --muted:#6b7280; --bg:#f9fafb; --brand:#0ea5e9; }
+    html,body{margin:0;height:100%;background:var(--bg);font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Hiragino Kaku Gothic ProN", Meiryo, "Noto Sans JP", sans-serif;}
+    .wrap{min-height:100%;display:flex;flex-direction:column}
+    header{padding:20px 16px 8px;text-align:center}
+    h1{margin:0;font-size:28px;}
+    main{flex:1;display:flex;}
+    .card{margin:12px auto 24px; width:min(720px, 100% - 24px); background:#fff; border-radius:16px; box-shadow:0 6px 24px rgba(2,6,23,.08); padding:20px;}
+    label{display:block;font-size:16px;color:var(--muted);margin-bottom:6px}
+    input[type="date"], input[type="text"]{width:100%;font-size:24px;padding:14px 16px;border:1px solid #e5e7eb;border-radius:12px}
+    .out{font-variant-numeric: tabular-nums; font-weight:700; letter-spacing: .04em;}
+    .big{font-size:44px;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .hint{font-size:14px;color:var(--muted);}
+    button{appearance:none;border:0;border-radius:12px;padding:14px 18px;font-size:18px}
+    .btn{background:var(--brand);color:#fff;}
+    .btn:active{transform:translateY(1px)}
+    .ghost{background:#eef6ff;color:#0369a1}
+    .grid{display:grid; gap:12px}
+    footer{padding:8px 16px 24px;color:var(--muted);font-size:14px;text-align:center}
+    .toast{position:fixed;inset:auto 12px 12px 12px;display:none;background:#111827;color:#fff;border-radius:12px;padding:12px 14px;font-size:16px;text-align:center}
+    .toast.show{display:block;animation:fade 2.2s ease}
+    @keyframes fade{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>date2nine</h1>
+    </header>
+    <main>
+      <section class="card">
+        <div class="grid">
+          <div>
+            <label for="date">年月日を選択</label>
+            <input id="date" type="date" inputmode="numeric"/>
+          </div>
+
+          <div>
+            <label>パスワード</label>
+            <input id="final9" class="out big mono" type="text" readonly value="-" />
+          </div>
+
+          <div class="grid">
+            <button id="copy" class="btn">コピー</button>
+            <button id="share" class="ghost">共有</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>オフライン対応 / ホーム画面に追加可</footer>
+  </div>
+
+  <div id="toast" class="toast">コピーしました</div>
+
+  <script>
+    function yyyymmddDigits(dateStr){
+      if(!dateStr) return null;
+      const s = dateStr.replaceAll('-', '');
+      if(!/^\d{8}$/.test(s)) return null;
+      return s.split('').map(d=>Number(d));
+    }
+
+    function addNoCarry(digits){
+      const base = [1,2,3,4,5,6,7,8];
+      return digits.map((d,i)=> (d + base[i]) % 10);
+    }
+
+    function sumDigits(digs){
+      return digs.reduce((a,b)=>a+b,0);
+    }
+
+    function compute(dateStr){
+      const y8 = yyyymmddDigits(dateStr);
+      if(!y8) return { final:null };
+      const s8 = addNoCarry(y8);
+      const cd = sumDigits(s8) % 10;
+      const final = s8.join('') + String(cd);
+      return { final };
+    }
+
+    const elDate = document.getElementById('date');
+    const elFinal = document.getElementById('final9');
+    const elToast = document.getElementById('toast');
+
+    function render(res){
+      if(!res || !res.final){
+        elFinal.value = '-';
+        return;
+      }
+      elFinal.value = res.final;
+    }
+
+    function setToday(){
+      const tzOffsetMs = new Date().getTimezoneOffset() * 60000;
+      const localISO = new Date(Date.now() - tzOffsetMs).toISOString().slice(0,10);
+      elDate.value = localISO;
+      render(compute(localISO));
+    }
+
+    elDate.addEventListener('change', () => {
+      render(compute(elDate.value));
+    });
+
+    document.getElementById('copy').addEventListener('click', async () => {
+      const txt = elFinal.value;
+      if(!txt || txt==='-') return;
+      try { await navigator.clipboard.writeText(txt); showToast('コピーしました'); }
+      catch(e){ showToast('コピーに失敗しました'); }
+    });
+
+    document.getElementById('share').addEventListener('click', async () => {
+      const txt = elFinal.value;
+      if(!txt || txt==='-') return;
+      if(navigator.share){
+        try{ await navigator.share({ title:'date2nine', text: txt }); }
+        catch(_){}
+      } else {
+        showToast('共有に非対応です');
+      }
+    });
+
+    function showToast(msg){
+      elToast.textContent = msg; elToast.classList.add('show');
+      setTimeout(()=> elToast.classList.remove('show'), 2000);
+    }
+
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+
+    setToday();
+  </script>
+</body>
+</html>
