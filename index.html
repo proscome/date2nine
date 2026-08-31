@@ -14,10 +14,10 @@
   <style>
     /* ---------- カラーテーマ変数 ---------- */
     :root {
-      --fg: #0b132b;    /* メイン文字色（濃紺） */
-      --muted: #6b7280; /* 補助文字色（グレー） */
-      --bg: #f9fafb;    /* 背景色（薄グレー） */
-      --brand: #0ea5e9; /* ブランドカラー（水色） */
+      --fg: #0b132b;
+      --muted: #6b7280;
+      --bg: #f9fafb;
+      --brand: #0ea5e9;
     }
 
     /* ---------- ページ全体の基本設定 ---------- */
@@ -41,19 +41,10 @@
       padding: 20px 16px 8px;
       text-align: center;
     }
+
     h1 {
       margin: 0;
       font-size: 28px;
-      display: flex;
-      aligin-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .title-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
     }
 
     /* ---------- メインエリア ---------- */
@@ -80,22 +71,27 @@
       margin-bottom: 6px;
     }
 
-    input[type="date"], input[type="text"] {
+    input[type="date"],
+    input[type="text"] {
       width: 100%;
       font-size: 24px;
       padding: 14px 16px;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
+      box-sizing: border-box;
     }
 
     /* ---------- 出力テキストスタイル ---------- */
     .out {
-      font-variant-numeric: tabular-nums; /* 桁のズレを防ぐ数字書体 */
+      font-variant-numeric: tabular-nums;
       font-weight: 700;
       letter-spacing: .04em;
     }
 
-    .big { font-size: 44px; } /* 大きな文字サイズ */
+    .big {
+      font-size: 44px;
+    }
+
     .mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
                    "Liberation Mono", "Courier New", monospace;
@@ -133,7 +129,7 @@
       color: #0369a1;
     }
 
-    /* グリッドレイアウト（ボタンなどを並べる） */
+    /* グリッドレイアウト */
     .grid {
       display: grid;
       gap: 12px;
@@ -147,7 +143,42 @@
       text-align: center;
     }
 
-    /* ---------- トースト通知（コピー完了など） ---------- */
+    /* ==================================================
+       PROSCOME 署名
+       右下にひっそり表示
+       ================================================== */
+    .creator {
+      position: fixed;
+      right: 16px;
+      bottom: 12px;
+
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+
+      color: #9ca3af;
+
+      /* 他の要素より前面に表示 */
+      z-index: 1000;
+
+      /* 署名自身はクリック操作を邪魔しない */
+      pointer-events: none;
+    }
+
+    /* PROSCOMEロゴ */
+    .creator-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      border-radius: 5px;
+      opacity: .75;
+    }
+
+    /* ---------- トースト通知 ---------- */
     .toast {
       position: fixed;
       inset: auto 12px 12px 12px;
@@ -158,6 +189,9 @@
       padding: 12px 14px;
       font-size: 16px;
       text-align: center;
+
+      /* トーストは署名より上に表示 */
+      z-index: 2000;
     }
 
     /* 表示アニメーション */
@@ -166,25 +200,39 @@
       animation: fade 2.2s ease;
     }
 
-    /* フェードイン・アウトのアニメーション定義 */
+    /* フェードイン・アウト */
     @keyframes fade {
-      0% { opacity: 0; transform: translateY(8px); }
-      10% { opacity: 1; transform: translateY(0); }
-      80% { opacity: 1; }
-      100% { opacity: 0; }
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      10% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <div class="wrap">
+
     <!-- ===== ヘッダー部分 ===== -->
+    <!-- アイコンはここには置かない -->
     <header>
-      <h1>
-        <img src="./icons/icon-192.png" alt="" class="title-icon">
-        date2nine
-      </h1>
+      <h1>date2nine</h1>
     </header>
+
 
     <!-- ===== メイン部分 ===== -->
     <main>
@@ -194,133 +242,226 @@
           <!-- 日付入力欄 -->
           <div>
             <label for="date">年月日を選択</label>
-            <input id="date" type="date" inputmode="numeric" />
+            <input
+              id="date"
+              type="date"
+              inputmode="numeric"
+            />
           </div>
+
 
           <!-- 結果表示欄 -->
           <div>
             <label>パスワード</label>
-            <input id="final9" class="out big mono" type="text" readonly value="-" />
+            <input
+              id="final9"
+              class="out big mono"
+              type="text"
+              readonly
+              value="-"
+            />
           </div>
 
-          <!-- ボタン（コピー・共有） -->
+
+          <!-- ボタン -->
           <div class="grid">
-            <button id="copy" class="btn">コピー</button>
-            <button id="share" class="ghost">共有</button>
+            <button id="copy" class="btn">
+              コピー
+            </button>
+
+            <button id="share" class="ghost">
+              共有
+            </button>
           </div>
 
         </div>
       </section>
     </main>
 
+
     <!-- ===== フッター ===== -->
-    <footer>オフライン対応 / ホーム画面に追加可</footer>
+    <footer>
+      オフライン対応 / ホーム画面に追加可
+    </footer>
+
   </div>
 
-  <!-- ===== トースト通知（コピー完了メッセージなど） ===== -->
-  <div id="toast" class="toast">コピーしました</div>
+
+  <!-- ==================================================
+       PROSCOME 署名
+       右下にロゴ＋PROSCOMEをひっそり表示
+       ================================================== -->
+  <div class="creator">
+    <img
+      src="./icons/icon-192.png"
+      alt=""
+      class="creator-icon"
+    >
+    <span>PROSCOME</span>
+  </div>
+
+
+  <!-- ===== トースト通知 ===== -->
+  <div id="toast" class="toast">
+    コピーしました
+  </div>
+
 
   <!-- ==========================
        JavaScriptロジック
        ========================== -->
   <script>
+
     /* ---- 日付文字列を8桁の数字配列に変換 ---- */
-    function yyyymmddDigits(dateStr){
-      if(!dateStr) return null;
-      const s = dateStr.replaceAll('-', '');   // "2025-10-07" → "20251007"
-      if(!/^\d{8}$/.test(s)) return null;
-      return s.split('').map(d => Number(d));  // 各桁を数値配列に
+    function yyyymmddDigits(dateStr) {
+      if (!dateStr) return null;
+
+      const s = dateStr.replaceAll('-', '');
+
+      if (!/^\d{8}$/.test(s)) return null;
+
+      return s.split('').map(d => Number(d));
     }
 
-    /* ---- 各桁に1〜8を足し、10を超えたら繰り上げずに1桁目だけ残す ---- */
-    function addNoCarry(digits){
-      const base = [1,2,3,4,5,6,7,8];
-      return digits.map((d,i) => (d + base[i]) % 10);
+
+    /* ---- 各桁に1〜8を足す ---- */
+    function addNoCarry(digits) {
+      const base = [1, 2, 3, 4, 5, 6, 7, 8];
+
+      return digits.map((d, i) => (d + base[i]) % 10);
     }
+
 
     /* ---- 桁の合計を求める ---- */
-    function sumDigits(digs){
-      return digs.reduce((a,b) => a + b, 0);
+    function sumDigits(digs) {
+      return digs.reduce((a, b) => a + b, 0);
     }
 
+
     /* ---- 最終9桁のパスワードを計算 ---- */
-    function compute(dateStr){
+    function compute(dateStr) {
       const y8 = yyyymmddDigits(dateStr);
-      if(!y8) return { final: null };
+
+      if (!y8) {
+        return { final: null };
+      }
+
       const s8 = addNoCarry(y8);
-      const cd = sumDigits(s8) % 10;           // 合計の1桁目をチェックディジットとして使用
-      const final = s8.join('') + String(cd);  // 8桁 + チェックディジット = 9桁
+
+      const cd = sumDigits(s8) % 10;
+
+      const final = s8.join('') + String(cd);
+
       return { final };
     }
+
 
     /* ---- DOM要素の取得 ---- */
     const elDate = document.getElementById('date');
     const elFinal = document.getElementById('final9');
     const elToast = document.getElementById('toast');
 
+
     /* ---- 結果を画面に反映 ---- */
-    function render(res){
-      if(!res || !res.final){
+    function render(res) {
+      if (!res || !res.final) {
         elFinal.value = '-';
         return;
       }
+
       elFinal.value = res.final;
     }
 
+
     /* ---- 初期状態として今日の日付を設定 ---- */
-    function setToday(){
-      const tzOffsetMs = new Date().getTimezoneOffset() * 60000; // タイムゾーン補正
-      const localISO = new Date(Date.now() - tzOffsetMs).toISOString().slice(0,10);
+    function setToday() {
+      const tzOffsetMs =
+        new Date().getTimezoneOffset() * 60000;
+
+      const localISO =
+        new Date(Date.now() - tzOffsetMs)
+          .toISOString()
+          .slice(0, 10);
+
       elDate.value = localISO;
+
       render(compute(localISO));
     }
+
 
     /* ---- 日付変更時のイベント ---- */
     elDate.addEventListener('change', () => {
       render(compute(elDate.value));
     });
 
+
     /* ---- コピー処理 ---- */
     document.getElementById('copy').addEventListener('click', async () => {
+
       const txt = elFinal.value;
-      if(!txt || txt === '-') return;
+
+      if (!txt || txt === '-') return;
+
       try {
         await navigator.clipboard.writeText(txt);
         showToast('コピーしました');
-      } catch(e) {
+
+      } catch (e) {
         showToast('コピーに失敗しました');
       }
     });
 
+
     /* ---- 共有処理 ---- */
     document.getElementById('share').addEventListener('click', async () => {
+
       const txt = elFinal.value;
-      if(!txt || txt === '-') return;
-      if(navigator.share){
+
+      if (!txt || txt === '-') return;
+
+      if (navigator.share) {
+
         try {
-          await navigator.share({ title: 'date2nine', text: txt });
-        } catch(_) {}
+          await navigator.share({
+            title: 'date2nine',
+            text: txt
+          });
+
+        } catch (_) {}
+
       } else {
         showToast('共有に非対応です');
       }
     });
 
+
     /* ---- トースト表示 ---- */
-    function showToast(msg){
+    function showToast(msg) {
+
       elToast.textContent = msg;
+
       elToast.classList.add('show');
-      setTimeout(() => elToast.classList.remove('show'), 2000);
+
+      setTimeout(() => {
+        elToast.classList.remove('show');
+      }, 2000);
     }
 
+
     /* ---- Service Worker登録（PWA対応） ---- */
-    if('serviceWorker' in navigator){
+    if ('serviceWorker' in navigator) {
+
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js');
       });
+
     }
+
 
     /* ---- ページ読み込み時に今日の日付で初期化 ---- */
     setToday();
+
   </script>
+
 </body>
 </html>
