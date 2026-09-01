@@ -1,24 +1,15 @@
 <!doctype html>
-
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1, viewport-fit=cover"
-
->
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>date2nine</title>
-
-  <meta name="theme-color" content="#0ea5e9">
-
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
   <style>
-
+    /* ---------- カラーテーマ ---------- */
     :root {
       --fg: #0b132b;
       --muted: #6b7280;
@@ -26,18 +17,16 @@ content="width=device-width, initial-scale=1, viewport-fit=cover"
       --brand: #0ea5e9;
     }
 
-
+    /* ---------- ページ全体 ---------- */
     html,
     body {
       margin: 0;
       height: 100%;
       background: var(--bg);
-
       font-family:
         system-ui,
         -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
+        Segoe UI,
         Roboto,
         Helvetica,
         Arial,
@@ -47,100 +36,96 @@ content="width=device-width, initial-scale=1, viewport-fit=cover"
         sans-serif;
     }
 
-
     .wrap {
       min-height: 100%;
       display: flex;
       flex-direction: column;
     }
 
-
+    /* ---------- ヘッダー ---------- */
     header {
       padding: 20px 16px 8px;
       text-align: center;
     }
-
 
     h1 {
       margin: 0;
       font-size: 28px;
     }
 
-
+    /* ---------- メイン ---------- */
     main {
       flex: 1;
       display: flex;
     }
 
-
+    /* ---------- カード ---------- */
     .card {
       margin: 12px auto 24px;
-
       width: min(720px, calc(100% - 24px));
 
       background: #fff;
-
       border-radius: 16px;
-
-      box-shadow:
-        0 6px 24px rgba(2, 6, 23, .08);
+      box-shadow: 0 6px 24px rgba(2, 6, 23, .08);
 
       padding: 20px;
-
-      box-sizing: border-box;
+      padding-bottom: 68px;
 
       position: relative;
-
-      padding-bottom: 88px;
+      box-sizing: border-box;
     }
 
-
-    .grid {
-      display: grid;
-      gap: 14px;
-    }
-
-
+    /* ---------- フォーム ---------- */
     label {
       display: block;
-
       font-size: 16px;
-
       color: var(--muted);
-
       margin-bottom: 6px;
     }
-
 
     input[type="date"],
     input[type="text"] {
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
 
       font-size: 24px;
-
       padding: 14px 16px;
 
       border: 1px solid #e5e7eb;
-
       border-radius: 12px;
 
       box-sizing: border-box;
+      display: block;
     }
 
+    /*
+      iPhone / Safari対策
 
+      Safariのdate入力欄がネイティブUIの影響で
+      横方向にはみ出す場合があるため、
+      dateだけ明示的にカード内幅へ固定する。
+    */
+    @supports (-webkit-touch-callout: none) {
+      input[type="date"] {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        display: block;
+      }
+    }
+
+    /* ---------- 出力 ---------- */
     .out {
       font-variant-numeric: tabular-nums;
-
       font-weight: 700;
-
       letter-spacing: .04em;
     }
-
 
     .big {
       font-size: 44px;
     }
-
 
     .mono {
       font-family:
@@ -154,92 +139,60 @@ content="width=device-width, initial-scale=1, viewport-fit=cover"
         monospace;
     }
 
-
-    /* ==================================================
-       ボタン
-       ================================================== */
-
-    .button-group {
-      display: grid;
-
-      gap: 8px;
-    }
-
-
+    /* ---------- ボタン ---------- */
     button {
-      width: 100%;
-
       appearance: none;
-
       border: 0;
-
       border-radius: 12px;
-
       padding: 14px 18px;
-
       font-size: 18px;
-
+      width: 100%;
       box-sizing: border-box;
-
-      cursor: pointer;
-
-      -webkit-tap-highlight-color: transparent;
-
-      touch-action: manipulation;
     }
-
 
     .btn {
       background: var(--brand);
-
       color: #fff;
     }
 
-
-    .ghost {
-      background: #eef6ff;
-
-      color: #0369a1;
-    }
-
-
-    .install-button {
-      background: #f0fdf4;
-
-      color: #166534;
-
-      border: 1px solid #bbf7d0;
-    }
-
-
-    button:active {
+    .btn:active {
       transform: translateY(1px);
     }
 
+    .ghost {
+      background: #eef6ff;
+      color: #0369a1;
+    }
 
-    /* ==================================================
-       PROSCOME
-       ================================================== */
+    /*
+      ボタン同士の間隔
+    */
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
 
+    /* ---------- ホーム画面追加案内 ---------- */
+    .install-btn {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+
+    /* ---------- PROSCOME ---------- */
     .creator {
       position: absolute;
 
       right: 16px;
-
       bottom: 14px;
 
       display: flex;
-
       align-items: center;
-
       gap: 6px;
 
       color: #6b7280;
-
       font-size: 12px;
-
       font-weight: 700;
-
       letter-spacing: .12em;
 
       opacity: .9;
@@ -247,846 +200,465 @@ content="width=device-width, initial-scale=1, viewport-fit=cover"
       pointer-events: none;
     }
 
-
     .creator-icon {
       width: 24px;
-
       height: 24px;
-
       object-fit: contain;
-
       border-radius: 6px;
     }
 
-
-    /* ==================================================
-       トースト
-       ================================================== */
-
+    /* ---------- トースト ---------- */
     .toast {
       position: fixed;
-
       left: 12px;
       right: 12px;
       bottom: 12px;
 
-      z-index: 3000;
-
       display: none;
 
       background: #111827;
-
       color: #fff;
 
       border-radius: 12px;
-
-      padding: 13px 16px;
+      padding: 12px 14px;
 
       font-size: 16px;
-
       text-align: center;
 
-      box-sizing: border-box;
+      cursor: pointer;
+      z-index: 1000;
     }
-
 
     .toast.show {
       display: block;
     }
-
-
-    /* ==================================================
-       ホーム画面追加案内
-       ================================================== */
-
-    .install-guide {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 2000;
-
-      display: none;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-
-      box-sizing: border-box;
-
-      background: rgba(0, 0, 0, .35);
-    }
-
-
-    .install-guide.show {
-      display: flex;
-    }
-
-
-    .install-guide-box {
-      width: min(420px, 100%);
-
-      background: #fff;
-
-      border-radius: 18px;
-
-      padding: 22px;
-
-      box-sizing: border-box;
-
-      box-shadow:
-        0 12px 40px rgba(0, 0, 0, .25);
-    }
-
-
-    .install-guide-title {
-      font-size: 21px;
-
-      font-weight: 700;
-
-      margin-bottom: 16px;
-
-      color: var(--fg);
-    }
-
-
-    .install-guide-text {
-      font-size: 16px;
-
-      line-height: 1.8;
-
-      color: #374151;
-    }
-
-
-    .install-guide-text div {
-      margin: 10px 0;
-    }
-
-
-    .install-guide-note {
-      margin-top: 18px;
-
-      text-align: center;
-
-      font-size: 13px;
-
-      color: var(--muted);
-    }
-
   </style>
-
 </head>
 
 <body>
 
-<div class="wrap">
+  <div class="wrap">
 
-  <!-- ==================================================
-       ヘッダー
-       ================================================== -->
-
-  <header>
-    <h1>date2nine</h1>
-  </header>
-
-  <!-- ==================================================
-       メイン
-       ================================================== -->
-
-  <main>
-
-<section class="card">
+    <!-- ===== ヘッダー ===== -->
+    <header>
+      <h1>date2nine</h1>
+    </header>
 
 
-  <div class="grid">
+    <!-- ===== メイン ===== -->
+    <main>
+
+      <section class="card">
+
+        <div class="grid">
+
+          <!-- 日付 -->
+          <div>
+            <label for="date">年月日を選択</label>
+
+            <input
+              id="date"
+              type="date"
+              inputmode="numeric"
+            />
+          </div>
 
 
-    <!-- 年月日 -->
+          <!-- パスワード -->
+          <div>
+            <label>パスワード</label>
 
-    <div>
-
-      <label for="date">
-        年月日を選択
-      </label>
-
-      <input
-        id="date"
-        type="date"
-        inputmode="numeric"
-      >
-
-    </div>
+            <input
+              id="final9"
+              class="out big mono"
+              type="text"
+              readonly
+              value="-"
+            />
+          </div>
 
 
-    <!-- パスワード -->
+          <!-- ボタン -->
+          <div class="grid">
 
-    <div>
+            <button id="copy" class="btn">
+              コピー
+            </button>
 
-      <label>
-        パスワード
-      </label>
+            <button id="share" class="ghost">
+              共有
+            </button>
 
-      <input
-        id="final9"
-        class="out big mono"
-        type="text"
-        readonly
-        value="-"
-      >
+            <button id="installHelp" class="install-btn">
+              ホーム画面に追加するには
+            </button>
 
-    </div>
+          </div>
 
-
-    <!-- ==================================================
-         ボタン
-         ================================================== -->
-
-    <div class="button-group">
+        </div>
 
 
-      <button
-        id="copy"
-        class="btn"
-        type="button"
-      >
-        コピー
-      </button>
+        <!-- ===== PROSCOME ===== -->
+        <div class="creator">
 
+          <img
+            src="./icons/icon-192.png"
+            alt=""
+            class="creator-icon"
+          />
 
-      <button
-        id="share"
-        class="ghost"
-        type="button"
-      >
-        共有
-      </button>
+          <span>PROSCOME</span>
 
+        </div>
 
-      <button
-        id="installButton"
-        class="install-button"
-        type="button"
-      >
-        ホーム画面に追加するには
-      </button>
+      </section>
 
-
-    </div>
+    </main>
 
   </div>
 
 
-  <!-- ==================================================
-       PROSCOME
-       ================================================== -->
-
-  <div class="creator">
-
-    <img
-      src="./icons/icon-192.png"
-      alt=""
-      class="creator-icon"
-    >
-
-    <span>PROSCOME</span>
-
-  </div>
+  <!-- ===== メッセージ ===== -->
+  <div id="toast" class="toast"></div>
 
 
-</section>
+  <script>
 
-  </main>
+    /* ==========================================
+       日付 → 8桁
+       ========================================== */
 
-</div>
+    function yyyymmddDigits(dateStr) {
 
-<!-- ==================================================
-     iPhone用ホーム画面追加案内
-     ================================================== -->
+      if (!dateStr) return null;
 
-<div
-  id="installGuide"
-  class="install-guide"
->
+      const s = dateStr.replaceAll('-', '');
 
-  <div class="install-guide-box">
+      if (!/^\d{8}$/.test(s)) {
+        return null;
+      }
 
-<div class="install-guide-title">
-  📱 ホーム画面に追加
-</div>
-
-
-<div class="install-guide-text">
-
-  <div>
-    <strong>①</strong>
-    Safariの画面にある
-    <strong>「…」</strong>
-    をタップ
-  </div>
-
-
-  <div>
-    <strong>②</strong>
-    <strong>「共有」</strong>
-    をタップ
-  </div>
-
-
-  <div>
-    <strong>③</strong>
-    <strong>「ホーム画面に追加」</strong>
-    をタップ
-  </div>
-
-</div>
-
-
-<div class="install-guide-note">
-  画面をタップすると閉じます
-</div>
-
-  </div>
-
-</div>
-
-<!-- ==================================================
-     トースト
-     ================================================== -->
-
-<div
-  id="toast"
-  class="toast"
->
-</div>
-
-<script>
-
-  /* ==================================================
-     日付処理
-     ================================================== */
-
-  function yyyymmddDigits(dateStr) {
-
-    if (!dateStr) {
-      return null;
+      return s.split('').map(d => Number(d));
     }
 
-    const s =
-      dateStr.replace(/-/g, '');
 
-    if (!/^\d{8}$/.test(s)) {
-      return null;
-    }
+    /* ==========================================
+       各桁に1〜8を加算
+       ========================================== */
 
-    return s
-      .split('')
-      .map(function(d) {
-        return Number(d);
-      });
-  }
+    function addNoCarry(digits) {
 
+      const base = [
+        1, 2, 3, 4,
+        5, 6, 7, 8
+      ];
 
-  function addNoCarry(digits) {
-
-    const base =
-      [1, 2, 3, 4, 5, 6, 7, 8];
-
-    return digits.map(function(d, i) {
-      return (d + base[i]) % 10;
-    });
-  }
-
-
-  function sumDigits(digs) {
-
-    return digs.reduce(function(a, b) {
-      return a + b;
-    }, 0);
-  }
-
-
-  function compute(dateStr) {
-
-    const y8 =
-      yyyymmddDigits(dateStr);
-
-    if (!y8) {
-      return {
-        final: null
-      };
-    }
-
-    const s8 =
-      addNoCarry(y8);
-
-    const cd =
-      sumDigits(s8) % 10;
-
-    return {
-      final:
-        s8.join('') + String(cd)
-    };
-  }
-
-
-  /* ==================================================
-     DOM
-     ================================================== */
-
-  const elDate =
-    document.getElementById('date');
-
-  const elFinal =
-    document.getElementById('final9');
-
-  const elToast =
-    document.getElementById('toast');
-
-  const elInstallButton =
-    document.getElementById('installButton');
-
-  const elInstallGuide =
-    document.getElementById('installGuide');
-
-
-  /* ==================================================
-     トースト
-     ================================================== */
-
-  let toastTimer = null;
-
-  function showToast(message) {
-
-    elToast.textContent =
-      message;
-
-    elToast.classList.add('show');
-
-    clearTimeout(toastTimer);
-
-    toastTimer =
-      setTimeout(function() {
-
-        elToast.classList.remove('show');
-
-      }, 2200);
-  }
-
-
-  /* ==================================================
-     表示
-     ================================================== */
-
-  function render(result) {
-
-    if (
-      !result ||
-      !result.final
-    ) {
-
-      elFinal.value = '-';
-
-      return;
-    }
-
-    elFinal.value =
-      result.final;
-  }
-
-
-  /* ==================================================
-     今日の日付
-     ================================================== */
-
-  function setToday() {
-
-    const now =
-      new Date();
-
-    const year =
-      now.getFullYear();
-
-    const month =
-      String(
-        now.getMonth() + 1
-      ).padStart(2, '0');
-
-    const day =
-      String(
-        now.getDate()
-      ).padStart(2, '0');
-
-    const today =
-      year + '-' +
-      month + '-' +
-      day;
-
-    elDate.value =
-      today;
-
-    render(
-      compute(today)
-    );
-  }
-
-
-  /* ==================================================
-     日付変更
-     ================================================== */
-
-  elDate.addEventListener(
-    'change',
-    function() {
-
-      render(
-        compute(elDate.value)
+      return digits.map(
+        (d, i) => (d + base[i]) % 10
       );
-
     }
-  );
 
 
-  /* ==================================================
-     コピー
-     ================================================== */
+    /* ==========================================
+       桁の合計
+       ========================================== */
 
-  document
-    .getElementById('copy')
-    .addEventListener(
-      'click',
-      async function() {
+    function sumDigits(digs) {
 
-        const text =
-          elFinal.value;
-
-        if (
-          !text ||
-          text === '-'
-        ) {
-          return;
-        }
+      return digs.reduce(
+        (a, b) => a + b,
+        0
+      );
+    }
 
 
-        try {
+    /* ==========================================
+       最終9桁
+       ========================================== */
 
-          await navigator.clipboard
-            .writeText(text);
+    function compute(dateStr) {
 
-          showToast(
-            'パスワードをコピーしました'
-          );
+      const y8 = yyyymmddDigits(dateStr);
 
-        } catch (error) {
+      if (!y8) {
+        return { final: null };
+      }
 
-          /*
-           * iPhoneなどでClipboard APIが
-           * 使えない場合の予備処理
-           */
+      const s8 = addNoCarry(y8);
+
+      const cd = sumDigits(s8) % 10;
+
+      const final =
+        s8.join('') + String(cd);
+
+      return { final };
+    }
+
+
+    /* ==========================================
+       DOM
+       ========================================== */
+
+    const elDate =
+      document.getElementById('date');
+
+    const elFinal =
+      document.getElementById('final9');
+
+    const elToast =
+      document.getElementById('toast');
+
+    const elInstallHelp =
+      document.getElementById('installHelp');
+
+
+    /* ==========================================
+       表示
+       ========================================== */
+
+    function render(res) {
+
+      if (!res || !res.final) {
+
+        elFinal.value = '-';
+
+        return;
+      }
+
+      elFinal.value = res.final;
+    }
+
+
+    /* ==========================================
+       今日の日付
+       ========================================== */
+
+    function setToday() {
+
+      const tzOffsetMs =
+        new Date().getTimezoneOffset() * 60000;
+
+      const localISO =
+        new Date(Date.now() - tzOffsetMs)
+          .toISOString()
+          .slice(0, 10);
+
+      elDate.value = localISO;
+
+      render(compute(localISO));
+    }
+
+
+    /* ==========================================
+       日付変更
+       ========================================== */
+
+    elDate.addEventListener(
+      'change',
+      () => {
+        render(compute(elDate.value));
+      }
+    );
+
+
+    /* ==========================================
+       コピー
+       ========================================== */
+
+    document
+      .getElementById('copy')
+      .addEventListener(
+        'click',
+        async () => {
+
+          const txt = elFinal.value;
+
+          if (!txt || txt === '-') {
+            return;
+          }
 
           try {
 
-            elFinal.focus();
-
-            elFinal.select();
-
-            document.execCommand('copy');
+            await navigator.clipboard.writeText(txt);
 
             showToast(
               'パスワードをコピーしました'
             );
 
-          } catch (_) {
+          } catch (e) {
 
             showToast(
               'コピーに失敗しました'
             );
+          }
+        }
+      );
 
+
+    /* ==========================================
+       共有
+       ========================================== */
+
+    document
+      .getElementById('share')
+      .addEventListener(
+        'click',
+        async () => {
+
+          const txt = elFinal.value;
+
+          if (!txt || txt === '-') {
+            return;
           }
 
+          if (navigator.share) {
+
+            try {
+
+              await navigator.share({
+                title: 'date2nine',
+                text: txt
+              });
+
+            } catch (_) {}
+
+          } else {
+
+            showToast(
+              '共有に非対応です'
+            );
+          }
         }
+      );
+
+
+    /* ==========================================
+       ホーム画面に追加するには
+       ========================================== */
+
+    let deferredPrompt = null;
+
+
+    window.addEventListener(
+      'beforeinstallprompt',
+      (e) => {
+
+        e.preventDefault();
+
+        deferredPrompt = e;
 
       }
     );
 
 
-  /* ==================================================
-     共有
-     ================================================== */
-
-  document
-    .getElementById('share')
-    .addEventListener(
+    elInstallHelp.addEventListener(
       'click',
-      async function() {
+      async () => {
 
-        const text =
-          elFinal.value;
+        /*
+          Android / Chrome / Edge
+          ----------------------
+          ブラウザからインストール
+        */
 
-        if (
-          !text ||
-          text === '-'
-        ) {
+        if (deferredPrompt) {
+
+          deferredPrompt.prompt();
+
+          try {
+            await deferredPrompt.userChoice;
+          } catch (_) {}
+
+          deferredPrompt = null;
+
           return;
         }
 
 
-        if (
-          typeof navigator.share ===
-          'function'
-        ) {
+        /*
+          iPhone / iPad Safari
+          -------------------
+          「共有」→「ホーム画面に追加」
+          の操作方法を表示
+        */
 
-          try {
+        const isIOS =
+          /iphone|ipad|ipod/i.test(
+            navigator.userAgent
+          );
 
-            await navigator.share({
-
-              title: 'date2nine',
-
-              text: text
-
-            });
-
-          } catch (_) {
-
-            /*
-             * 共有画面を閉じた場合などは
-             * 何もしない
-             */
-
-          }
-
-        } else {
+        if (isIOS) {
 
           showToast(
-            '共有に対応していません'
+            'Safariの「共有」→「ホーム画面に追加」を選択してください'
+          );
+
+          return;
+        }
+
+
+        /*
+          その他のブラウザ
+        */
+
+        showToast(
+          'ブラウザのメニューから「インストール」または「ホーム画面に追加」を選択してください'
+        );
+
+      }
+    );
+
+
+    /* ==========================================
+       トースト
+       タップで消す
+       ========================================== */
+
+    function showToast(msg) {
+
+      elToast.textContent = msg;
+
+      elToast.classList.add('show');
+    }
+
+
+    elToast.addEventListener(
+      'click',
+      () => {
+
+        elToast.classList.remove('show');
+
+      }
+    );
+
+
+    /* ==========================================
+       Service Worker
+       ========================================== */
+
+    if ('serviceWorker' in navigator) {
+
+      window.addEventListener(
+        'load',
+        () => {
+
+          navigator.serviceWorker.register(
+            './sw.js'
           );
 
         }
-
-      }
-    );
-
-
-  /* ==================================================
-     Android / Chrome
-     インストールイベント
-     ================================================== */
-
-  let deferredInstallPrompt =
-    null;
-
-
-  window.addEventListener(
-    'beforeinstallprompt',
-    function(event) {
-
-      event.preventDefault();
-
-      deferredInstallPrompt =
-        event;
-
-    }
-  );
-
-
-  /* ==================================================
-     iPhone / iPad判定
-     ================================================== */
-
-  function isIOS() {
-
-    const ua =
-      navigator.userAgent ||
-      '';
-
-    if (
-      /iPhone|iPod|iPad/i.test(ua)
-    ) {
-      return true;
-    }
-
-
-    /*
-     * iPadがMacとして認識される場合
-     */
-
-    if (
-      navigator.platform === 'MacIntel' &&
-      navigator.maxTouchPoints > 1
-    ) {
-      return true;
-    }
-
-
-    return false;
-  }
-
-
-  /* ==================================================
-     PWA起動判定
-     ================================================== */
-
-  function isPWA() {
-
-    if (
-      window.navigator.standalone === true
-    ) {
-      return true;
-    }
-
-
-    if (
-      window.matchMedia(
-        '(display-mode: standalone)'
-      ).matches
-    ) {
-      return true;
-    }
-
-
-    return false;
-  }
-
-
-  /* ==================================================
-     ホーム画面に追加するには
-     ================================================== */
-
-  elInstallButton.addEventListener(
-    'click',
-    async function() {
-
-
-      /*
-       * Android / Chrome
-       */
-
-      if (
-        deferredInstallPrompt
-      ) {
-
-        deferredInstallPrompt
-          .prompt();
-
-        try {
-
-          const choice =
-            await deferredInstallPrompt
-              .userChoice;
-
-          if (
-            choice.outcome ===
-            'accepted'
-          ) {
-
-            showToast(
-              'ホーム画面に追加しました'
-            );
-
-          }
-
-        } catch (_) {}
-
-        deferredInstallPrompt =
-          null;
-
-        return;
-      }
-
-
-      /*
-       * iPhone / iPad
-       */
-
-      if (isIOS()) {
-
-        elInstallGuide
-          .classList
-          .add('show');
-
-        return;
-      }
-
-
-      /*
-       * その他のブラウザ
-       */
-
-      showToast(
-        'ブラウザのメニューから「ホーム画面に追加」または「インストール」を選択してください'
       );
 
     }
-  );
 
 
-  /* ==================================================
-     案内をタップすると閉じる
-     ================================================== */
+    /* ==========================================
+       初期化
+       ========================================== */
 
-  elInstallGuide.addEventListener(
-    'click',
-    function() {
+    setToday();
 
-      elInstallGuide
-        .classList
-        .remove('show');
-
-    }
-  );
-
-
-  /* ==================================================
-     PWAとして起動している場合
-     ボタンを消す
-     ================================================== */
-
-  if (isPWA()) {
-
-    elInstallButton.style.display =
-      'none';
-
-  }
-
-
-  /* ==================================================
-     Service Worker
-     ================================================== */
-
-  if (
-    'serviceWorker' in navigator
-  ) {
-
-    window.addEventListener(
-      'load',
-      function() {
-
-        navigator.serviceWorker
-          .register('./sw.js')
-          .catch(function(error) {
-
-            console.error(
-              'Service Worker:',
-              error
-            );
-
-          });
-
-      }
-    );
-
-  }
-
-
-  /* ==================================================
-     初期化
-     ================================================== */
-
-  setToday();
-
-</script>
+  </script>
 
 </body>
 </html>
