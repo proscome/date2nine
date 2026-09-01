@@ -108,9 +108,8 @@
     */
     @supports (-webkit-touch-callout: none) {
       input[type="date"] {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
+        width: calc(100% - 6mm);
+        max-width: calc(100% - 6mm);
         box-sizing: border-box;
         display: block;
       }
