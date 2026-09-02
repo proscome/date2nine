@@ -895,7 +895,8 @@
         if (isIOS) {
 
           showToast(
-            'Safariの「共有」→「ホーム画面に追加」を選択してください'
+            'Safariの「共有」→「ホーム画面に追加」を選択してください',
+            0
           );
 
           return;
@@ -907,7 +908,8 @@
         */
 
         showToast(
-          'ブラウザのメニューから「インストール」または「ホーム画面に追加」を選択してください'
+          'ブラウザのメニューから「インストール」または「ホーム画面に追加」を選択してください',
+          0
         );
 
       }
@@ -918,7 +920,7 @@
        メッセージ表示
        ========================================== */
 
-    function showToast(msg) {
+    function showToast(msg, duration = 2000) {
 
       elToast.textContent =
         msg;
@@ -926,6 +928,20 @@
       elToast.classList.add(
         'show'
       );
+
+      clearTimeout(showToast.timer);
+
+      if (duration > 0) {
+
+        showToast.timer =
+          setTimeout(() => {
+
+            elToast.classList.remove(
+              'show'
+            );
+
+          }, duration);
+      }
     }
 
 
